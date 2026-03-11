@@ -1,0 +1,13 @@
+cat > .gitignore << 'EOF'
+.env
+__pycache__/
+*.pyc
+*.pyo
+data/memory.db
+*.mp3
+*.wav
+.DS_Store
+*.egg-info/
+.venv/
+venv/
+EOF
