@@ -4,13 +4,3 @@ port = 8501
 
 [browser]
 gatherUsageStats = false
-```
-
----
-
-### 4. `requirements_streamlit.txt`
-```
-streamlit
-httpx
-audio-recorder-streamlit
-python-dotenv
