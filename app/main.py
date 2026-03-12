@@ -32,9 +32,16 @@ TEMP_DIR = Path(tempfile.gettempdir()) / "voice_agent_input"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("🚀 Starting AI Voice Agent (low-latency mode)...")
+
+    from app.config import settings
+
+    print("GROQ KEY LENGTH:", len(settings.GROQ_API_KEY))
+    print("GROQ KEY START:", settings.GROQ_API_KEY[:10])
+
     TEMP_DIR.mkdir(parents=True, exist_ok=True)
     get_agent()
     stt_service.preload()
+
     logger.info("✅ Ready!")
     yield
 
