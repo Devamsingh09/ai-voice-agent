@@ -43,7 +43,8 @@ if "thread_id" not in st.session_state:
     st.session_state.thread_id = str(uuid.uuid4())[:8]
 
 import os
-BACKEND = os.getenv("BACKEND_URL", "http://localhost:8000")
+# BACKEND = os.getenv("BACKEND_URL", "http://localhost:8000")
+BACKEND = st.secrets["BACKEND_URL"]
 
 def check_backend():
     try:
