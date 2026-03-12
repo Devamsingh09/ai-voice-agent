@@ -45,7 +45,7 @@ if "thread_id" not in st.session_state:
 import os
 # BACKEND = os.getenv("BACKEND_URL", "http://localhost:8000")
 BACKEND = st.secrets["BACKEND_URL"]
-
+st.write("Backend URL:", BACKEND)
 def check_backend():
     try:
         return httpx.get(f"{BACKEND}/health", timeout=2).status_code == 200
