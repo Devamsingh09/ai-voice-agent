@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: ai-voice-agent-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.1-8b-instant
+      - key: WHISPER_MODEL
+        value: base
+      - key: DB_PATH
+        value: ./data/memory.db
+    disk:
+      name: sqlite-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+```
+
+---
+
+## Files Modified
+
+### 6. `requirements.txt` — Whisper removed (too heavy for Render free tier)
+```
+# Core Framework
+fastapi
+uvicorn[standard]
+python-multipart
+aiofiles
+
+# LangChain + LangGraph
+langchain
+langgraph
+langchain-groq
+langchain-community
+langgraph-checkpoint-sqlite
+
+# TTS
+gTTS
+
+# Utilities
+httpx
+python-dotenv
+pydantic

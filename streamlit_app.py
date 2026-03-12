@@ -42,7 +42,8 @@ st.markdown("""
 if "thread_id" not in st.session_state:
     st.session_state.thread_id = str(uuid.uuid4())[:8]
 
-BACKEND = "http://localhost:8000"
+import os
+BACKEND = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 def check_backend():
     try:
@@ -70,6 +71,7 @@ if not backend_ok:
     st.error("⚠ Backend offline — run: uvicorn app.main:app --reload --port 8000")
 
 # The entire voice interface is one self-contained HTML component
+_backend_url = BACKEND
 VOICE_APP = f"""
 <!DOCTYPE html>
 <html>
@@ -226,7 +228,7 @@ VOICE_APP = f"""
 </div>
 
 <script>
-const BACKEND   = "http://localhost:8000";
+const BACKEND   = "{_backend_url}";
 const THREAD_ID = "{st.session_state.thread_id}";
 
 // ── State ──────────────────────────────────────────────────────────────────
