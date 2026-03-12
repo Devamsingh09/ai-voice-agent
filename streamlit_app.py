@@ -43,9 +43,9 @@ if "thread_id" not in st.session_state:
     st.session_state.thread_id = str(uuid.uuid4())[:8]
 
 import os
-# BACKEND = os.getenv("BACKEND_URL", "http://localhost:8000")
-BACKEND = st.secrets["BACKEND_URL"]
-st.write("Backend URL:", BACKEND)
+# Try to get backend URL from secrets, fallback to localhost if not found
+BACKEND = st.secrets.get("BACKEND_URL", "http://localhost:8000")
+
 def check_backend():
     try:
         return httpx.get(f"{BACKEND}/health", timeout=2).status_code == 200
@@ -64,12 +64,14 @@ with col2:
         st.rerun()
 with col3:
     if st.button("✕ clear"):
-        try: httpx.delete(f"{BACKEND}/history/{st.session_state.thread_id}", timeout=3)
-        except: pass
+        try: 
+            httpx.delete(f"{BACKEND}/history/{st.session_state.thread_id}", timeout=3)
+        except: 
+            pass
         st.rerun()
 
 if not backend_ok:
-    st.error("⚠ Backend offline — run: uvicorn app.main:app --reload --port 8000")
+    st.error(f"⚠ Backend offline at {BACKEND} — run: uvicorn app.main:app --reload --port 8000")
 
 # The entire voice interface is one self-contained HTML component
 _backend_url = BACKEND
@@ -207,7 +209,6 @@ VOICE_APP = f"""
 </head>
 <body>
 
-<!-- Conversation -->
 <div id="conversation">
   <div id="emptyState">
     <div class="empty-icon">🎙️</div>
@@ -215,7 +216,6 @@ VOICE_APP = f"""
   </div>
 </div>
 
-<!-- Bottom bar -->
 <div id="bottom">
   <div id="textRow">
     <input id="textInput" type="text" placeholder="Or type a message...">
@@ -433,10 +433,8 @@ async function streamAndSpeak(userText) {{
 // ── Speech recognition ─────────────────────────────────────────────────────
 function setupRecognition() {{
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  console.log("SpeechRecognition:", SR);
   if (!SR) {{
     statusText.textContent = 'BROWSER NOT SUPPORTED';
-    console.log("SpeechRecognition not available");
     micBtn.disabled = true;
     return null;
   }}
@@ -474,7 +472,6 @@ function setupRecognition() {{
       if (interimBubble) interimBubble.textContent = '🎙️ ' + finalText.trim();
       streamAndSpeak(finalText.trim());
     }} else {{
-      // Nothing heard — remove placeholder and go back to idle
       if (interimBubble && interimBubble.closest('.msg')) {{
         interimBubble.closest('.msg').remove();
       }}
@@ -502,7 +499,9 @@ function startListening() {{
 }}
 
 function stopListening() {{
-  if (recognition) {{ try {{ recognition.stop(); }} catch(e) {{}} }}
+  if (recognition) {{ 
+    try {{ recognition.stop(); }} catch(e) {{}} 
+  }}
 }}
 
 // ── Mic button ─────────────────────────────────────────────────────────────
