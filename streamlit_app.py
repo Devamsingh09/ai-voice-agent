@@ -433,8 +433,10 @@ async function streamAndSpeak(userText) {{
 // ── Speech recognition ─────────────────────────────────────────────────────
 function setupRecognition() {{
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  console.log("SpeechRecognition:", SR);
   if (!SR) {{
     statusText.textContent = 'BROWSER NOT SUPPORTED';
+    console.log("SpeechRecognition not available");
     micBtn.disabled = true;
     return null;
   }}
@@ -493,12 +495,11 @@ function setupRecognition() {{
 }}
 
 // ── Start / stop listening ─────────────────────────────────────────────────
-function startListening() {{
-  if (state !== 'idle') return;
+function startListening() {
   synth.cancel();
   recognition = setupRecognition();
   if (recognition) recognition.start();
-}}
+}
 
 function stopListening() {{
   if (recognition) {{ try {{ recognition.stop(); }} catch(e) {{}} }}
