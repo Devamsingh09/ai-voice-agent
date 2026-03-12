@@ -495,11 +495,11 @@ function setupRecognition() {{
 }}
 
 // ── Start / stop listening ─────────────────────────────────────────────────
-function startListening() {
+function startListening() {{
   synth.cancel();
   recognition = setupRecognition();
   if (recognition) recognition.start();
-}
+}}
 
 function stopListening() {{
   if (recognition) {{ try {{ recognition.stop(); }} catch(e) {{}} }}
